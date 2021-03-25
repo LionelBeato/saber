@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script defer>
+
+        const evtSource = new EventSource("http://localhost:8080/all");
+
+       /* evtSource.onmessage = function(event) {
+              const newElement = document.createElement("li");
+              const eventList = document.getElementById("list");
+
+              newElement.textContent = "message: " + event.data;
+              eventList.appendChild(newElement);
+            } */
+
+         evtSource.addEventListener('message', (event) => {
+              console.log(event.data.)
+              const newElement = document.createElement("li");
+              const eventList = document.getElementById("list");
+              newElement.textContent = "message: " + event.data;
+              eventList.appendChild(newElement);
+        }, false);
+
+
+
+
+    </script>
+</head>
+<body>
+
+<ul id="list">
+
+</ul>
+
+</body>
+</html>
