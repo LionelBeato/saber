@@ -1,39 +1,28 @@
 package works.lionel.saber.router;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
-import org.springframework.web.reactive.function.server.RouterFunction;
-import org.springframework.web.reactive.function.server.RouterFunctions;
-import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.reactive.function.server.*;
 import works.lionel.saber.handler.KnolHandler;
-import works.lionel.saber.model.Knol;
-import works.lionel.saber.repository.KnolRepository;
 
-import static org.springframework.web.reactive.function.server.RequestPredicates.DELETE;
-import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
-import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @Configuration
+@Slf4j
 public class KnolRouter {
 
-    @Autowired
-    KnolRepository knolRepository;
-
     @Bean
-    RouterFunction<?> knolRoutes(@NonNull KnolHandler knolHandler) {
+    public static RouterFunction<ServerResponse> knolRoutes(@NonNull KnolHandler knolHandler) {
         return RouterFunctions
                 .route()
                 .GET("/knols", knolHandler::findAll)
-                .GET("/knols/{id}", knolHandler::findById)
+                .GET("/knols/id/{id}", knolHandler::findById)
+                .GET("/knols/name/{title}", knolHandler::findByTitle)
                 .POST("/knols", knolHandler::save)
-                .DELETE("/knols/{id}", knolHandler::deleteById)
+                .DELETE("/knols/id/{id}", knolHandler::deleteById)
                 .build();
     }
-
-
-
 
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+import works.lionel.saber.KnolClient;
 import works.lionel.saber.model.Knol;
 import works.lionel.saber.repository.KnolRepository;
 
@@ -30,7 +31,7 @@ public class KnolHandler {
     private KnolRepository knolRepository;
 
     public Mono<ServerResponse> findAll(ServerRequest req) {
-        return ok().body(knolRepository.findAll(), Knol.class);
+        return ok().body(knolRepository.findAll(), Knol.class).log();
     }
 
     public Mono<ServerResponse> deleteById(ServerRequest req) {
@@ -44,7 +45,11 @@ public class KnolHandler {
     public Mono<ServerResponse> save(ServerRequest req) {
         Mono<Knol> knol = req.bodyToMono(Knol.class);
         return created(req.uri())
-                .body(knol.map(k -> new Knol(k.getName(), k.getDescription()))
+                .body(knol.map(k -> new Knol())
                         .flatMap(knolRepository::save), Knol.class);
+    }
+
+    public Mono<ServerResponse> findByTitle(ServerRequest req) {
+        return ok().body(KnolClient.consume(req.pathVariable("title")), Knol.class).log();
     }
 }
