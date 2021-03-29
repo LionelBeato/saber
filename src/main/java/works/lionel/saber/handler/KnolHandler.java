@@ -31,25 +31,36 @@ public class KnolHandler {
     private KnolRepository knolRepository;
 
     public Mono<ServerResponse> findAll(ServerRequest req) {
-        return ok().body(knolRepository.findAll(), Knol.class).log();
+        return ok()
+//                .contentType(MediaType.TEXT_EVENT_STREAM)
+                .body(knolRepository.findAll(), Knol.class)
+                .log();
     }
 
     public Mono<ServerResponse> deleteById(ServerRequest req) {
-        return accepted().body(knolRepository.deleteById(req.pathVariable("id")), Knol.class);
+        return accepted()
+//                .contentType(MediaType.TEXT_EVENT_STREAM)
+                .body(knolRepository.deleteById(req.pathVariable("id")), Knol.class);
     }
 
     public Mono<ServerResponse> findById(ServerRequest req) {
-        return ok().body(knolRepository.findById(req.pathVariable("id")), Knol.class);
+        return ok()
+//                .contentType(MediaType.TEXT_EVENT_STREAM)
+                .body(knolRepository.findById(req.pathVariable("id")), Knol.class);
     }
 
     public Mono<ServerResponse> save(ServerRequest req) {
         Mono<Knol> knol = req.bodyToMono(Knol.class);
         return created(req.uri())
+//                .contentType(MediaType.TEXT_EVENT_STREAM)
                 .body(knol.map(k -> new Knol())
                         .flatMap(knolRepository::save), Knol.class);
     }
 
     public Mono<ServerResponse> findByTitle(ServerRequest req) {
-        return ok().body(KnolClient.consume(req.pathVariable("title")), Knol.class).log();
+        return ok()
+//                .contentType(MediaType.TEXT_EVENT_STREAM)
+                .body(KnolClient.consume(req.pathVariable("title")), Knol.class)
+                .log();
     }
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+  </head>
+  <body>
+    <h1>Welcome to Saber!</h1>
+
+    <input id="title" type="text" placeholder="title" name="title" />
+    <button onclick="submitted()">Search</button>
+    <p id="data"></p>
+
+    <script>
+      console.log("hello world");
+
+      let submitted = () => {
+        let search = document.getElementById("title");
+        let dataDOM = document.getElementById("data");
+        console.log(search.value);
+
+        fetch(`http://localhost:8080/knols/name/${search.value}`)
+          .then((response) => response.body)
+          .then((body) => body.getReader())
+          .then((reader) => {
+            return new ReadableStream({
+              start(controller) {
+                function push() {
+                  reader.read().then(({ done, value }) => {
+                    if (done) {
+                      console.log(`done`, done);
+                      controller.close();
+                      return;
+                    }
+                    controller.enqueue(value);
+                    console.log(done, value);
+                    push();
+                  });
+                }
+                push();
+              },
+            });
+          })
+          .then((stream) => {
+            return new Response(stream, {
+              headers: { "Content-Type": "text/json" },
+            }).json();
+          })
+          .then((result) => {
+            console.log(result);
+            dataDOM.innerText = JSON.stringify(result);
+          })
+          .catch((error) => console.log(error));
+      };
+    </script>
+  </body>
+</html>
