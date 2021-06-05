@@ -6,6 +6,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 import works.lionel.saber.KnolClient;
 import works.lionel.saber.model.Knol;
@@ -51,13 +52,14 @@ public class KnolHandler {
 
     public Mono<ServerResponse> save(ServerRequest req) {
         Mono<Knol> knol = req.bodyToMono(Knol.class);
+
         return created(req.uri())
-//                .contentType(MediaType.TEXT_EVENT_STREAM)
-                .body(knol.map(k -> new Knol())
-                        .flatMap(knolRepository::save), Knol.class);
+                .body(knol.flatMap(knolRepository::save), Knol.class);
+
     }
 
     public Mono<ServerResponse> findByTitle(ServerRequest req) {
+        System.out.println(req.pathVariable("title"));
         return ok()
 //                .contentType(MediaType.TEXT_EVENT_STREAM)
                 .body(KnolClient.consume(req.pathVariable("title")), Knol.class)

@@ -13,6 +13,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
+import java.util.Set;
 
 /**
  *
@@ -26,7 +27,7 @@ import java.util.Objects;
 @Document
 public class Knol {
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Id
     private String id;
     private String title;
@@ -35,31 +36,6 @@ public class Knol {
     private Image originalimage;
     private Image thumbnail;
     private String extract;
+    private Set<User> knower;
 }
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-class ContentUrls {
-    private Platform desktop;
-    private Platform mobile;
-}
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-class Platform {
-    private String page;
-    private String revisions;
-    private String edit;
-    private String talk;
-}
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-class Image {
-    private String source;
-    private Integer width;
-    private Integer height;
-}

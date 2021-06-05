@@ -7,32 +7,16 @@
   <body>
     <h1>Welcome to Saber!</h1>
 
-    <input id="input" type="text" placeholder="title" name="title" />
+    <input id="title" type="text" placeholder="title" name="title" />
     <button onclick="submitted()">Search</button>
-    <div id="data">
-      <img id="thumbnail" src="" />
-      <h1 id="title"></h1>
-      <p id="description"></p>
-      <p id="extract"></p>
-    </div>
+    <p id="data"></p>
 
     <script>
       console.log("hello world");
 
       let submitted = () => {
-        let search = document.getElementById("input");
+        let search = document.getElementById("title");
         let dataDOM = document.getElementById("data");
-
-        let title = document.getElementById("title");
-        let description = document.getElementById("description");
-        let extract = document.getElementById("extract");
-        let thumbnail = document.getElementById("thumbnail");
-
-        title.innerText = "";
-        description.innerText = "";
-        extract.innerText = "";
-        thumbnail.src = "";
-
         console.log(search.value);
 
         fetch(`http://localhost:8080/knols/name/${search.value}`)
@@ -64,10 +48,7 @@
           })
           .then((result) => {
             console.log(result);
-            title.innerText = result.title;
-            description.innerText = result.description;
-            extract.innerText = result.extract;
-            thumbnail.src = result.thumbnail.source;
+            dataDOM.innerText = JSON.stringify(result);
           })
           .catch((error) => console.log(error));
       };
